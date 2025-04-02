@@ -26,6 +26,44 @@
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
+    <div id="rotate-screen">
+      <img src="Restart.png" alt="Поверните устройство">
+    </div>
+
+    <style>
+      #rotate-screen {
+        display: none; /* Изначально скрыто */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: black;
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+      }
+    
+      #rotate-screen img {
+        width: 50%;
+        max-width: 300px;
+      }
+    </style>
+
+  <script>
+    function checkOrientation() {
+      let rotateScreen = document.getElementById("rotate-screen");
+      if (window.innerHeight > window.innerWidth) {
+        rotateScreen.style.display = "flex"; // Показываем экран
+      } else {
+        rotateScreen.style.display = "none"; // Скрываем экран
+      }
+    }
+
+    window.addEventListener("resize", checkOrientation);
+    document.addEventListener("DOMContentLoaded", checkOrientation);
+  </script>
+
     <script>
 
       var container = document.querySelector("#unity-container");
@@ -131,19 +169,5 @@
       document.body.appendChild(script);
 
     </script>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        let canvas = document.getElementById("unity-canvas");
-      
-        function resizeCanvas() {
-          canvas.style.width = window.innerHeight + "px";
-          canvas.style.height = window.innerWidth + "px";
-        }
-      
-        resizeCanvas();
-        window.addEventListener("resize", resizeCanvas);
-      });
-  </script>
   </body>
 </html>
