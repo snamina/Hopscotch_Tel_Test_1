@@ -171,18 +171,28 @@
     </script>
 
     <script>
-      function isIOS() {
-        return /iPad|iPhone|iPod/.test(navigator.userAgent);
+      function unlockAudio() {
+          if (typeof AudioContext !== "undefined" || typeof webkitAudioContext !== "undefined") {
+              let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+              if (audioCtx.state === "suspended") {
+                  let unlock = function() {
+                      audioCtx.resume().then(() => {
+                          console.log("Audio unlocked!");
+                          document.removeEventListener("click", unlock);
+                          document.removeEventListener("touchstart", unlock);
+                      });
+                  };
+                  document.addEventListener("click", unlock);
+                  document.addEventListener("touchstart", unlock);
+              }
+          }
       }
       
-      if (isIOS()) {
-        document.addEventListener("click", function enableAudio() {
-          if (typeof unityInstance !== "undefined" && unityInstance) {
-            unityInstance.SendMessage("Main Camera", "UnmuteAudio");
-          }
-          document.removeEventListener("click", enableAudio);
-        });
+      // Функция вызывается из Unity
+      function RequestAudioUnlock() {
+          unlockAudio();
       }
-    </script>
+      </script>
+
   </body>
 </html>
