@@ -64,25 +64,6 @@
     document.addEventListener("DOMContentLoaded", checkOrientation);
   </script>
 
-  <script>
-    document.addEventListener("click", function enableAudio() {
-      let audios = document.getElementsByTagName("audio");
-      let videos = document.getElementsByTagName("video");
-    
-      for (let audio of audios) {
-        audio.muted = false;
-        audio.play().catch(() => {}); // Размьют и запустит звук
-      }
-    
-      for (let video of videos) {
-        video.muted = false;
-        video.play().catch(() => {}); // Размьют и запустит видео-звук
-      }
-    
-      document.removeEventListener("click", enableAudio);
-    });
-    </script>
-
     <script>
 
       var container = document.querySelector("#unity-container");
@@ -188,5 +169,15 @@
       document.body.appendChild(script);
 
     </script>
+
+    <script>
+      document.addEventListener("click", function enableAudio() {
+        if (typeof unityInstance !== "undefined" && unityInstance) {
+          unityInstance.SendMessage("Main Camera", "UnmuteAudio");
+        }
+        document.removeEventListener("click", enableAudio);
+      });
+    </script>
+
   </body>
 </html>
