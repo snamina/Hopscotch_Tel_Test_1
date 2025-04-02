@@ -171,13 +171,18 @@
     </script>
 
     <script>
-      document.addEventListener("click", function enableAudio() {
-        if (typeof unityInstance !== "undefined" && unityInstance) {
-          unityInstance.SendMessage("Main Camera", "UnmuteAudio");
-        }
-        document.removeEventListener("click", enableAudio);
-      });
+      function isIOS() {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent);
+      }
+      
+      if (isIOS()) {
+        document.addEventListener("click", function enableAudio() {
+          if (typeof unityInstance !== "undefined" && unityInstance) {
+            unityInstance.SendMessage("Main Camera", "UnmuteAudio");
+          }
+          document.removeEventListener("click", enableAudio);
+        });
+      }
     </script>
-
   </body>
 </html>
