@@ -169,24 +169,5 @@
       document.body.appendChild(script);
 
     </script>
-
-    <script>
-      function unlockAudio() {
-          if (typeof AudioContext !== "undefined" || typeof webkitAudioContext !== "undefined") {
-              let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-              if (audioCtx.state === "suspended") {
-                  let unlock = function() {
-                      audioCtx.resume().then(() => {
-                          console.log("🔊 Audio unlocked!");
-                          document.removeEventListener("click", unlock);
-                          document.removeEventListener("touchstart", unlock);
-                      });
-                  };
-                  document.addEventListener("click", unlock);
-                  document.addEventListener("touchstart", unlock);
-              }
-          }
-      }
-      </script>
   </body>
 </html>
