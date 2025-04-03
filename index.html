@@ -65,6 +65,15 @@
   </script>
 
     <script>
+      document.addEventListener("click", function() {
+          let audioElements = document.getElementsByTagName("audio");
+          for (let i = 0; i < audioElements.length; i++) {
+              audioElements[i].play().catch(() => {});
+          }
+      }, { once: true });
+    </script>
+
+    <script>
 
       var container = document.querySelector("#unity-container");
       var canvas = document.querySelector("#unity-canvas");
