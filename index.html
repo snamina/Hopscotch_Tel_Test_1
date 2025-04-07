@@ -6,24 +6,6 @@
     <title>Unity WebGL Player | Hand Hopscotch Fun Brain Game</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-    <script>
-      var audioContext;
-    
-      function unlockAudio() {
-        if (audioContext) return;
-    
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const buffer = audioContext.createBuffer(1, 1, 22050);
-        const source = audioContext.createBufferSource();
-        source.buffer = buffer;
-        source.connect(audioContext.destination);
-        source.start(0);
-        console.log("Audio unlocked");
-      }
-    
-      document.addEventListener('touchend', unlockAudio, { once: true });
-      document.addEventListener('click', unlockAudio, { once: true });
-    </script>
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
