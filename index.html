@@ -1,69 +1,107 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Unity WebGL Player | Hand Hopscotch Fun Brain Game</title>
-  <link rel="shortcut icon" href="TemplateData/favicon.ico">
-  <link rel="stylesheet" href="TemplateData/style.css">
-</head>
-<body>
-
-  <!-- Стартовый экран -->
-  <div id="startScreen" style="position: fixed; top:0; left:0; width:100vw; height:100vh; background:black; z-index:9999; display:flex; justify-content:center; align-items:center;">
-    <button onclick="startGame()" style="padding: 20px 40px; font-size: 24px; cursor:pointer;">START</button>
-  </div>
-
-  <!-- Unity контейнер -->
-  <div id="unity-container" class="unity-desktop">
-    <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
-    <div id="unity-loading-bar">
-      <div id="unity-logo"></div>
-      <div id="unity-progress-bar-empty">
-        <div id="unity-progress-bar-full"></div>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | Hand Hopscotch Fun Brain Game</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <style>
+      #unity-container { display: none; }
+      #startButton { font-size: 24px; padding: 20px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    </style>
+  </head>
+  <body>
+    <button id="startButton" onclick="startGame()">Start Game</button>
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+      <div id="unity-footer">
+        <div id="unity-webgl-logo"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">Hand Hopscotch Fun Brain Game</div>
       </div>
     </div>
-    <div id="unity-warning"> </div>
-    <div id="unity-footer">
-      <div id="unity-webgl-logo"></div>
-      <div id="unity-fullscreen-button"></div>
-      <div id="unity-build-title">Hand Hopscotch Fun Brain Game</div>
+
+    <script>
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/Hopscotch_WebGL.loader.js";
+      var config = {
+          dataUrl: buildUrl + "/Hopscotch_WebGL.data",
+          frameworkUrl: buildUrl + "/Hopscotch_WebGL.framework.js",
+          codeUrl: buildUrl + "/Hopscotch_WebGL.wasm",
+          streamingAssetsUrl: "StreamingAssets",
+          companyName: "ZNOVANNA",
+          productName: "Hand Hopscotch Fun Brain Game",
+          productVersion: "1.0.2",
+      };
+  
+      function startGame() {
+          // Разблокировка аудиоконтекста
+          var AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+              var context = new AudioContext();
+              if (context.state === 'suspended') {
+                  context.resume().then(() => {
+                      console.log("AudioContext resumed");
+                  });
+              }
+          }
+  
+          // Показываем Unity и запускаем
+          document.getElementById("unity-container").style.display = "block";
+          document.getElementById("startButton").style.display = "none";
+  
+          var script = document.createElement("script");
+          script.src = loaderUrl;
+          script.onload = () => {
+              createUnityInstance(document.querySelector("#unity-canvas"), config, (progress) => {
+                  // Прогресс загрузки (оставь как было в оригинале)
+              });
+          };
+          document.body.appendChild(script);
+      }
+  </script>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <div id="rotate-screen">
+      <img src="Restart.png" alt="Поверните устройство">
     </div>
-  </div>
 
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <!-- Режим поворота экрана -->
-  <div id="rotate-screen">
-    <img src="Restart.png" alt="Поверните устройство">
-  </div>
-
-  <style>
-    #rotate-screen {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: black;
-      z-index: 9998;
-      justify-content: center;
-      align-items: center;
-    }
-    #rotate-screen img {
-      width: 50%;
-      max-width: 300px;
-    }
-  </style>
+    <style>
+      #rotate-screen {
+        display: none; /* Изначально скрыто */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: black;
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+      }
+    
+      #rotate-screen img {
+        width: 50%;
+        max-width: 300px;
+      }
+    </style>
 
   <script>
     function checkOrientation() {
       let rotateScreen = document.getElementById("rotate-screen");
       if (window.innerHeight > window.innerWidth) {
-        rotateScreen.style.display = "flex";
+        rotateScreen.style.display = "flex"; // Показываем экран
       } else {
-        rotateScreen.style.display = "none";
+        rotateScreen.style.display = "none"; // Скрываем экран
       }
     }
 
@@ -71,89 +109,6 @@
     document.addEventListener("DOMContentLoaded", checkOrientation);
   </script>
 
-  <script>
-    var container = document.querySelector("#unity-container");
-    var canvas = document.querySelector("#unity-canvas");
-    var loadingBar = document.querySelector("#unity-loading-bar");
-    var progressBarFull = document.querySelector("#unity-progress-bar-full");
-    var fullscreenButton = document.querySelector("#unity-fullscreen-button");
-    var warningBanner = document.querySelector("#unity-warning");
-
-    function unityShowBanner(msg, type) {
-      function updateBannerVisibility() {
-        warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-      }
-      var div = document.createElement('div');
-      div.innerHTML = msg;
-      warningBanner.appendChild(div);
-      if (type == 'error') div.style = 'background: red; padding: 10px;';
-      else {
-        if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-        setTimeout(function() {
-          warningBanner.removeChild(div);
-          updateBannerVisibility();
-        }, 5000);
-      }
-      updateBannerVisibility();
-    }
-
-    var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/Hopscotch_WebGL.loader.js";
-    var config = {
-      dataUrl: buildUrl + "/Hopscotch_WebGL.data",
-      frameworkUrl: buildUrl + "/Hopscotch_WebGL.framework.js",
-      codeUrl: buildUrl + "/Hopscotch_WebGL.wasm",
-      streamingAssetsUrl: "StreamingAssets",
-      companyName: "ZNOVANNA",
-      productName: "Hand Hopscotch Fun Brain Game",
-      productVersion: "1.0.2",
-      showBanner: unityShowBanner,
-    };
-
-    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-      var meta = document.createElement('meta');
-      meta.name = 'viewport';
-      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-      document.getElementsByTagName('head')[0].appendChild(meta);
-      container.className = "unity-mobile";
-      canvas.className = "unity-mobile";
-    } else {
-      canvas.style.width = "960px";
-      canvas.style.height = "600px";
-    }
-
-    canvas.style.background = "url('" + buildUrl + "/Hopscotch_WebGL.jpg') center / cover";
-    loadingBar.style.display = "none";
-
-    function startGame() {
-      // "Разрешаем" звук через пустой звук
-      const silentAudio = new Audio();
-      silentAudio.play().catch(() => {});
-
-      // Прячем стартовый экран
-      document.getElementById("startScreen").style.display = "none";
-
-      // Показываем прогресс Unity
-      loadingBar.style.display = "block";
-
-      // Загружаем Unity
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-        }).then((unityInstance) => {
-          loadingBar.style.display = "none";
-          fullscreenButton.onclick = () => {
-            unityInstance.SetFullscreen(1);
-          };
-        }).catch((message) => {
-          alert(message);
-        });
-      };
-      document.body.appendChild(script);
-    }
-  </script>
-
-</body>
+    
+  </body>
 </html>
