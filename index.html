@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
   <body>
+    <div class="jsmpeg"></div>
     <div id="start-button-container" style="position: absolute; width: 100%; height: 100%; background: #000; display: flex; align-items: center; justify-content: center; z-index: 9999;">
       <button id="start-button" style="padding: 20px 40px; font-size: 24px; border: none; border-radius: 8px; background: #1e90ff; color: white; cursor: pointer;">
-        Start Game
+        Start
       </button>
     </div>
     <div id="unity-container" class="unity-desktop">
@@ -79,6 +80,12 @@
 
     var startButton = document.getElementById("start-button");
     var startContainer = document.getElementById("start-button-container");
+
+    document.body.addEventListener('touchstart', function(){
+      player.audioOut.unlock(function(){
+        alert('unlocked!');
+      });
+    });
 
     function unityShowBanner(msg, type) {
       function updateBannerVisibility() {
