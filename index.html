@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
   <body>
-    <audio id="unlock-sound" src="silence.mp3" autoplay playsinline></audio>
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
@@ -66,12 +65,29 @@
   </script>
 
     <script>
-      document.addEventListener('click', function() {
-        const audio = document.getElementById('unlock-sound');
-        if (audio) {
-          audio.play().catch(e => {});
+      let audioContextUnlocked = false;
+
+      function unlockAudioContext() {
+        if (audioContextUnlocked) return;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const context = new AudioContext();
+
+        const buffer = context.createBuffer(1, 1, 22050);
+        const source = context.createBufferSource();
+        source.buffer = buffer;
+        source.connect(context.destination);
+        source.start(0);
+
+        if (context.state === 'suspended') {
+          context.resume();
         }
-      }, { once: true });
+
+        audioContextUnlocked = true;
+        console.log("AudioContext разблокирован");
+      }
+
+      document.addEventListener('click', unlockAudioContext, { once: true });
+      document.addEventListener('touchstart', unlockAudioContext, { once: true });
     </script>
     
     <script>
