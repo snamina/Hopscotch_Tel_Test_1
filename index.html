@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
   <body>
+    <audio id="unlock-sound" src="silence.mp3" autoplay playsinline></audio>
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
@@ -64,6 +65,15 @@
     document.addEventListener("DOMContentLoaded", checkOrientation);
   </script>
 
+    <script>
+      document.addEventListener('click', function() {
+        const audio = document.getElementById('unlock-sound');
+        if (audio) {
+          audio.play().catch(e => {});
+        }
+      }, { once: true });
+    </script>
+    
     <script>
 
       var container = document.querySelector("#unity-container");
