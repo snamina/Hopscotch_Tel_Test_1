@@ -65,32 +65,6 @@
   </script>
 
     <script>
-      let audioContextUnlocked = false;
-
-      function unlockAudioContext() {
-        if (audioContextUnlocked) return;
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const context = new AudioContext();
-
-        const buffer = context.createBuffer(1, 1, 22050);
-        const source = context.createBufferSource();
-        source.buffer = buffer;
-        source.connect(context.destination);
-        source.start(0);
-
-        if (context.state === 'suspended') {
-          context.resume();
-        }
-
-        audioContextUnlocked = true;
-        console.log("AudioContext разблокирован");
-      }
-
-      document.addEventListener('click', unlockAudioContext, { once: true });
-      document.addEventListener('touchstart', unlockAudioContext, { once: true });
-    </script>
-    
-    <script>
 
       var container = document.querySelector("#unity-container");
       var canvas = document.querySelector("#unity-canvas");
