@@ -178,5 +178,43 @@
       document.body.appendChild(script);
 
     </script>
+
+    <script>
+  // === Keep Screen Awake for Telegram Mini App ===
+  (function() {
+    if (!window.Telegram?.WebApp) return; // только внутри TMA
+
+    let lastActivity = Date.now();
+    const INTERVAL = 700; // каждые 0.7 секунды — оптимальный баланс
+
+    function fakeMouseMove() {
+      const now = Date.now();
+      if (now - lastActivity < INTERVAL) return;
+
+      lastActivity = now;
+
+      // Маленькое "движение" мыши — Telegram WebView это воспринимает как активность
+      const event = new MouseEvent('mousemove', {
+        bubbles: true,
+        cancelable: true,
+        clientX: window.innerWidth * 0.5 + Math.sin(now * 0.001) * 5,
+        clientY: window.innerHeight * 0.5 + Math.cos(now * 0.001) * 5
+      });
+
+      window.dispatchEvent(event);
+    }
+
+    // Бесконечный цикл requestAnimationFrame — очень сильно помогает
+    function keepAnimating() {
+      requestAnimationFrame(keepAnimating);
+      fakeMouseMove(); // можно вызывать не каждый кадр, но так надёжнее
+    }
+
+    requestAnimationFrame(keepAnimating);
+
+    console.log("[KeepAwake] Activated for Telegram Mini App");
+  })();
+</script>
+
   </body>
 </html>
