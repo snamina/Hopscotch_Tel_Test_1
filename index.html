@@ -10,27 +10,14 @@
             });
         }
     </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nosleep/0.12.0/NoSleep.min.js"></script>
+
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | Hand Hopscotch Fun Brain Game</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-
-    <script src="telegram.org"></script>
-    
-    <script>
-      // 2. Сразу после подключения инициализируем и запрещаем гаснуть экрану
-      const tg = window.Telegram.WebApp;
-      tg.ready(); // Сообщаем Telegram, что приложение готово
-
-      // Этот метод официально появился в новых версиях API (2024-2025)
-      // Он просит систему не выключать экран
-      if (tg.requestWakeLock) {
-          tg.requestWakeLock();
-          console.log("WakeLock activated");
-      }
-    </script>
-
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
@@ -194,5 +181,24 @@
       document.body.appendChild(script);
 
     </script>
+
+    <script>
+    // 1. Создаем объект NoSleep
+    var noSleep = new NoSleep();
+
+    // 2. Функция, которая включит "режим бодрствования"
+    function enableNoSleep() {
+      noSleep.enable();
+      console.log("NoSleep активирован");
+      // Удаляем обработчик, чтобы он не срабатывал при каждом клике
+      document.removeEventListener('click', enableNoSleep, false);
+      document.removeEventListener('touchstart', enableNoSleep, false);
+    }
+
+    // 3. Ждем первого клика или касания по экрану от пользователя
+    document.addEventListener('click', enableNoSleep, false);
+    document.addEventListener('touchstart', enableNoSleep, false);
+    </script>
+
   </body>
 </html>
