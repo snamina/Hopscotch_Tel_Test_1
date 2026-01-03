@@ -35,6 +35,19 @@
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
+    <script>
+      // 2. Сразу после подключения инициализируем и запрещаем гаснуть экрану
+      const tg = window.Telegram.WebApp;
+      tg.ready(); // Сообщаем Telegram, что приложение готово
+
+      // Этот метод официально появился в новых версиях API (2024-2025)
+      // Он просит систему не выключать экран
+      if (tg.requestWakeLock) {
+          tg.requestWakeLock();
+          console.log("WakeLock activated");
+      }
+    </script>
+
     <div id="rotate-screen">
       <img src="Restart.png" alt="Поверните устройство">
     </div>
